@@ -6,6 +6,9 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FBSDKLoginKit
+import  GoogleSignIn
 
 class ProfileViewController: UIViewController {
 
@@ -22,6 +25,26 @@ class ProfileViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableHeaderView = createTableHeader()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        // Log Out facebook
+        FBSDKLoginKit.LoginManager().logOut()
+        // Google Log out
+        GIDSignIn.sharedInstance()?.signOut()
+        
+        do {
+            try FirebaseAuth.Auth.auth().signOut()
+            
+            let vc = LoginViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            self.present(nav, animated: true)
+        }
+        catch {
+            print("Failed to log out")
+        }
     }
     
     func createTableHeader() -> UIView? {

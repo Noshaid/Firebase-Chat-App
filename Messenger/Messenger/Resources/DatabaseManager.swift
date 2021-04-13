@@ -103,7 +103,7 @@ struct ChatAppUser {
     }
 
     var profilePictureFileName: String {
-        //afraz9-gmail-com_profile_picture.png
+        //noshaid-gmail-com_profile_picture.png
         return "\(safeEmail)_profile_picture.png"
     }
 }
