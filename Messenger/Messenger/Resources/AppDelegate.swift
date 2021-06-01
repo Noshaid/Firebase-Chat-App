@@ -41,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 // MARK: - GIDSignInDelegate
-extension  AppDelegate: GIDSignInDelegate {
+extension AppDelegate: GIDSignInDelegate {
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
         
@@ -86,22 +86,24 @@ extension  AppDelegate: GIDSignInDelegate {
                                     return
                                 }
 
-                                let filename = chatUser.profilePictureFileName
-                                StorageManager.shared.uploadProfilePicture(with: data, fileName: filename, completion: { result in
-                                    switch result {
-                                    case .success(let downloadUrl):
-                                        UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-                                        print(downloadUrl)
-                                    case .failure(let error):
-                                        print("Storage maanger error: \(error)")
-                                    }
-                                })
+//                                let filename = chatUser.profilePictureFileName
+//                                StorageManager.shared.uploadProfilePicture(with: data, fileName: filename, completion: { result in
+//                                    switch result {
+//                                    case .success(let downloadUrl):
+//                                        UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+//                                        print(downloadUrl)
+//                                    case .failure(let error):
+//                                        print("Storage maanger error: \(error)")
+//                                    }
+//                                })
                             }).resume()
                         }
 
 
                     }
                 })
+            } else {
+                print("User already exists")
             }
         })
 

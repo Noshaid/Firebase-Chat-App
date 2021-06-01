@@ -20,7 +20,7 @@ class RegisterViewController: UIViewController {
        let imageView = UIImageView()
        imageView.image = UIImage(systemName: "person.circle")
        imageView.tintColor = .gray
-       imageView.contentMode = .scaleAspectFit
+        imageView.contentMode = .scaleAspectFill
        imageView.layer.masksToBounds = true
        imageView.layer.borderWidth = 2
        imageView.layer.borderColor = UIColor.lightGray.cgColor
@@ -185,7 +185,7 @@ class RegisterViewController: UIViewController {
             !password.isEmpty,
             !firstName.isEmpty,
             !lastName.isEmpty,
-            password.count >= 6 else {
+            password.count >= 3 else {
                 alertUserLoginError()
                 return
         }
@@ -246,7 +246,7 @@ class RegisterViewController: UIViewController {
         })
     }
     
-    func alertUserLoginError(message: String = "Please enter all information to create a new account.") {
+    func alertUserLoginError(message: String = "Please enter all correct information to create a new account.") {
         let alert = UIAlertController(title: "Woops",
                                       message: message,
                                       preferredStyle: .alert)

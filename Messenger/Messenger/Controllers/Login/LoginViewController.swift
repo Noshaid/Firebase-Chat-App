@@ -76,11 +76,17 @@ class LoginViewController: UIViewController {
     private let googleLogInButton = GIDSignInButton()
     
     private var loginObserver: NSObjectProtocol?
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main, using: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+        })
+        
         title = "Login"
         view.backgroundColor = .white
         
@@ -106,6 +112,12 @@ class LoginViewController: UIViewController {
         scrollView.addSubview(googleLogInButton)
     }
 
+    deinit {
+        if let observer = loginObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         

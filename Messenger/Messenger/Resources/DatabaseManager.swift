@@ -8,10 +8,10 @@
 import Foundation
 import FirebaseDatabase
 
-/// Manager object to read and write data to real time firebase database
+// Manager object to read and write data to real time firebase database
 final class DatabaseManager {
 
-    /// Shared instance of class
+    // Shared instance of class
     public static let shared = DatabaseManager()
     private let database = Database.database().reference()
 
@@ -25,7 +25,7 @@ final class DatabaseManager {
 // MARK: - Account Mgmt
 extension DatabaseManager {
     
-    /// - `completion`:   Async closure to return with result
+    // - `completion`:   Async closure to return with result
     public func userExists(with email: String,
                            completion: @escaping ((Bool) -> Void)) {
         
@@ -39,7 +39,7 @@ extension DatabaseManager {
         })
     }
     
-    /// Inserts new user to database
+    // Inserts new user to database
     public func insertUser(with user: ChatAppUser, completion: @escaping (Bool) -> Void) {
         database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
