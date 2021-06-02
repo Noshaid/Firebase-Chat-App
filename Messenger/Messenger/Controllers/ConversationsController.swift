@@ -15,7 +15,7 @@ class ConversationsController: UIViewController {
     
     private let tableView: UITableView = {
         let table = UITableView()
-        table.isHidden = true
+        table.isHidden = false
 //        table.register(ConversationTableViewCell.self,
 //                       forCellReuseIdentifier: ConversationTableViewCell.identifier)
         table.register(UITableViewCell.self,
@@ -36,11 +36,28 @@ class ConversationsController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(didComposeButton))
+        
         view.addSubview(tableView)
         view.addSubview(noConversationsLabel)
         setupTableView()
     }
 
+    @objc private func didComposeButton() {
+        let vc = NewConversationViewController()
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true, completion: nil)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
+        noConversationsLabel.frame = CGRect(x: 10,
+                                            y: (view.height-100)/2,
+                                            width: view.width-20,
+                                            height: 100)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -71,6 +88,7 @@ extension ConversationsController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         cell.textLabel?.text = "Hello!"
+        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
@@ -78,5 +96,10 @@ extension ConversationsController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
 //        let model = conversations[indexPath.row]
 //        openConversation(model)
+        
+        let vc = ChatViewController()
+        vc.title = "Noshaid Ali"
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
