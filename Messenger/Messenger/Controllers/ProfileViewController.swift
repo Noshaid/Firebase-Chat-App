@@ -33,10 +33,10 @@ class ProfileViewController: UIViewController {
         FBSDKLoginKit.LoginManager().logOut()
         // Google Log out
         GIDSignIn.sharedInstance()?.signOut()
-        
+
         do {
             try FirebaseAuth.Auth.auth().signOut()
-            
+
             let vc = LoginViewController()
             let nav = UINavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .fullScreen
@@ -54,7 +54,7 @@ class ProfileViewController: UIViewController {
         
         let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
         let filename = safeEmail + "_profile_picture.png"
-        let path = "images/"+filename
+        let path = "images/" + filename
         
         let headerView = UIView(frame: CGRect(x: 0,
                                               y: 0,
@@ -63,7 +63,7 @@ class ProfileViewController: UIViewController {
         headerView.backgroundColor = .link
         
         let imageView = UIImageView(frame: CGRect(x: (headerView.width-150) / 2,
-                                                  y: 75,
+                                                  y: (300-150)/2,
                                                   width: 150,
                                                   height: 150))
         imageView.contentMode = .scaleAspectFill
@@ -77,7 +77,7 @@ class ProfileViewController: UIViewController {
         /*StorageManager.shared.downloadURL(for: path, completion: { result in
             switch result {
                 case .success(let url):
-                    imageView.sd_setImage(with: url, completed: nil)
+                    //imageView.sd_setImage(with: url, completed: nil)
                 case .failure(let error):
                     print("Failed to get download url: \(error)")
             }

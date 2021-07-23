@@ -188,7 +188,7 @@ class RegisterViewController: UIViewController {
             !password.isEmpty,
             !firstName.isEmpty,
             !lastName.isEmpty,
-            password.count >= 3 else {
+            password.count >= 6 else {
                 alertUserLoginError()
                 return
         }
@@ -213,19 +213,18 @@ class RegisterViewController: UIViewController {
 
             FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password, completion: { authResult, error in
                 guard authResult != nil, error == nil else {
-                    print("Error cureating user")
+                    print("Error creating user")
                     return
                 }
 
                 UserDefaults.standard.setValue(email, forKey: "email")
                 UserDefaults.standard.setValue("\(firstName) \(lastName)", forKey: "name")
 
-
                 let chatUser = ChatAppUser(firstName: firstName,
                                           lastName: lastName,
                                           emailAddress: email)
                 DatabaseManager.shared.insertUser(with: chatUser, completion: { success in
-                    /*if success {
+                    if success {
                         // upload image
                         guard let image = strongSelf.imageView.image,
                             let data = image.pngData() else {
@@ -241,9 +240,8 @@ class RegisterViewController: UIViewController {
                                 print("Storage maanger error: \(error)")
                             }
                         })
-                    }*/
+                    }
                 })
-
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             })
         })

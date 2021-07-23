@@ -175,11 +175,12 @@ class LoginViewController: UIViewController {
                 strongSelf.spinner.dismiss()
             }
             
-            guard authResult != nil, error == nil else {
-                print("Error login user: \(email)")
+            guard let result = authResult, error == nil else {
+                print("Failed to log in user with email: \(email)")
                 return
             }
-            print(authResult?.user)
+            let user = result.user
+            UserDefaults.standard.set(email, forKey: "email")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         }
     }
@@ -251,15 +252,40 @@ extension LoginViewController: LoginButtonDelegate {
                 return
             }
             
+            UserDefaults.standard.set(email, forKey: "email")
+            
             DatabaseManager.shared.userExists(with: email) { (exists) in
                 if !exists {
                     let chatUser = ChatAppUser(firstName: firstName,
                                                lastName: lastName,
                                                emailAddress: email)
                     DatabaseManager.shared.insertUser(with: chatUser) { (success) in
-                        
+                        if success {
+                            guard let url = URL(string: pictureUrl) else {
+                                return
+                            }
+                            print("Downloading data from facebook image")
+                            URLSession.shared.dataTask(with: url, completionHandler: { data, _,_ in
+                                guard let data = data else {
+                                    print("Failed to get data from facebook")
+                                    return
+                                }
+                                
+                                print("got data from FB, uploading...")
+                                // upload iamge
+                                let filename = chatUser.profilePictureFileName
+                                StorageManager.shared.uploadProfilePicture(with: data, fileName: filename, completion: { result in
+                                    switch result {
+                                        case .success(let downloadUrl):
+                                            UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                            print(downloadUrl)
+                                        case .failure(let error):
+                                            print("Storage maanger error: \(error)")
+                                    }
+                                })
+                            }).resume()
+                        }
                     }
-                    
                 }
             }
             

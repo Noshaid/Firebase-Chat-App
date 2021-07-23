@@ -84,22 +84,19 @@ extension AppDelegate: GIDSignInDelegate {
                             URLSession.shared.dataTask(with: url, completionHandler: { data, _, _ in
                                 guard let data = data else {
                                     return
-                                }
-
-//                                let filename = chatUser.profilePictureFileName
-//                                StorageManager.shared.uploadProfilePicture(with: data, fileName: filename, completion: { result in
-//                                    switch result {
-//                                    case .success(let downloadUrl):
-//                                        UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-//                                        print(downloadUrl)
-//                                    case .failure(let error):
-//                                        print("Storage maanger error: \(error)")
-//                                    }
-//                                })
+                                } 
+                                let filename = chatUser.profilePictureFileName
+                                StorageManager.shared.uploadProfilePicture(with: data, fileName: filename, completion: { result in
+                                    switch result {
+                                    case .success(let downloadUrl):
+                                        UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                        print(downloadUrl)
+                                    case .failure(let error):
+                                        print("Storage maanger error: \(error)")
+                                    }
+                                })
                             }).resume()
                         }
-
-
                     }
                 })
             } else {

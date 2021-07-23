@@ -8,6 +8,17 @@
 import Foundation
 import FirebaseDatabase
 
+public enum DatabaseError: Error {
+    case failedToFetch
+    
+    public var localizedDescription: String {
+        switch self {
+            case .failedToFetch:
+                return "This means blah failed"
+        }
+    }
+}
+
 // Manager object to read and write data to real time firebase database
 final class DatabaseManager {
 
@@ -53,8 +64,20 @@ extension DatabaseManager {
                 completion(false)
                 return
             }
-            
-            /*strongSelf.database.child("users").observeSingleEvent(of: .value, with: { snapshot in
+            completion(true)
+            /*
+             users = [
+                [
+                    "name":
+                    "safe_email":
+                ]
+                [
+                    "name":
+                    "safe_email":
+                ]
+             ]
+             */
+            strongSelf.database.child("users").observeSingleEvent(of: .value, with: { snapshot in
                 if var usersCollection = snapshot.value as? [[String: String]] {
                     // append to user dictionary
                     let newElement = [
@@ -86,7 +109,19 @@ extension DatabaseManager {
                         completion(true)
                     })
                 }
-            })*/
+            })
+        })
+    }
+    
+    // Gets all users from database
+    public func getAllUsers(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
+        database.child("users").observeSingleEvent(of: .value, with: { snapshot in
+            guard let value = snapshot.value as? [[String: String]] else {
+                completion(.failure(DatabaseError.failedToFetch))
+                return
+            }
+            
+            completion(.success(value))
         })
     }
 }
