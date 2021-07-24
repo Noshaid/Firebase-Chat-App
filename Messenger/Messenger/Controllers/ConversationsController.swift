@@ -45,8 +45,24 @@ class ConversationsController: UIViewController {
 
     @objc private func didComposeButton() {
         let vc = NewConversationViewController()
+        vc.completion = { [weak self] result in
+            print("\(result)")
+            self?.createNewConversation(result: result)
+        }
         let navVC = UINavigationController(rootViewController: vc)
         present(navVC, animated: true, completion: nil)
+    }
+    
+    private func createNewConversation(result: SearchResult) {
+        
+        let name = result.name
+        let email = DatabaseManager.safeEmail(emailAddress: result.email)
+        
+        let vc = ChatViewController(with: email)
+        vc.isNewConversation = true
+        vc.title = name
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     override func viewDidLayoutSubviews() {
@@ -97,7 +113,7 @@ extension ConversationsController: UITableViewDelegate, UITableViewDataSource {
 //        let model = conversations[indexPath.row]
 //        openConversation(model)
         
-        let vc = ChatViewController()
+        let vc = ChatViewController(with: "n@g.com")
         vc.title = "Noshaid Ali"
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
