@@ -8,46 +8,10 @@
 import UIKit
 import MessageKit
 import InputBarAccessoryView
-
-struct Message: MessageType {
-    public var sender: SenderType
-    public var messageId: String
-    public var sentDate: Date
-    public var kind: MessageKind
-}
-
-extension MessageKind {
-    var messageKindString: String {
-        switch self {
-        case .text(_):
-            return "text"
-        case .attributedText(_):
-            return "attributed_text"
-        case .photo(_):
-            return "photo"
-        case .video(_):
-            return "video"
-        case .location(_):
-            return "location"
-        case .emoji(_):
-            return "emoji"
-        case .audio(_):
-            return "audio"
-        case .contact(_):
-            return "contact"
-        case .custom(_):
-            return "customc"
-        case .linkPreview(_):
-                return "linkPreview"
-        }
-    }
-}
-
-struct Sender: SenderType {
-    public var photoURL: String
-    public var senderId: String
-    public var displayName: String
-}
+import SDWebImage
+import AVFoundation
+import AVKit
+import CoreLocation
 
 class ChatViewController: MessagesViewController {
 
@@ -76,8 +40,8 @@ class ChatViewController: MessagesViewController {
                       displayName: "Me")
     }
     
-    init(with email: String) {//, id: String?) {
-        //self.conversationId = id
+    init(with email: String, id: String?) {
+        self.conversationId = id
         self.otherUserEmail = email
         super.init(nibName: nil, bundle: nil)
     }
@@ -99,9 +63,31 @@ class ChatViewController: MessagesViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         messageInputBar.inputTextView.becomeFirstResponder()
-//        if let conversationId = conversationId {
-//            listenForMessages(id: conversationId, shouldScrollToBottom: true)
-//        }
+        if let conversationId = conversationId {
+            listenForMessages(id: conversationId, shouldScrollToBottom: true)
+        }
+    }
+    
+    private func listenForMessages(id: String, shouldScrollToBottom: Bool) {
+        DatabaseManager.shared.getAllMessagesForConversations(with: id) { [weak self] result in
+            switch result {
+                case .success(let messages):
+                    print("success in getting messages: \(messages)")
+                    guard !messages.isEmpty else {
+                        print("messages are empty")
+                        return
+                    }
+                    self?.messages = messages
+                    DispatchQueue.main.async {
+                        self?.messagesCollectionView.reloadDataAndKeepOffset()
+                        if shouldScrollToBottom {
+                            self?.messagesCollectionView.scrollToLastItem()
+                        }
+                    }
+                case .failure(let error):
+                    print("failed to get messages: \(error)")
+            }
+        }
     }
 }
 
@@ -120,7 +106,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                                sentDate: Date(),
                                kind: .text(text))
         if isNewConversation {
-            DatabaseManager.shared.createNewConversation(with: otherUserEmail, firstMessage: message) { [weak self] success in
+            DatabaseManager.shared.createNewConversation(with: otherUserEmail, name: self.title ?? "User",  firstMessage: message) { [weak self] success in
                 if success {
                     print("message sent")
 //                    self?.isNewConversation = false
