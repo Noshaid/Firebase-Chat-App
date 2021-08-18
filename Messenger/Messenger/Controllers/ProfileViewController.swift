@@ -29,22 +29,22 @@ class ProfileViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         
-//        // Log Out facebook
-//        FBSDKLoginKit.LoginManager().logOut()
-//        // Google Log out
-//        GIDSignIn.sharedInstance()?.signOut()
-//
-//        do {
-//            try FirebaseAuth.Auth.auth().signOut()
-//
-//            let vc = LoginViewController()
-//            let nav = UINavigationController(rootViewController: vc)
-//            nav.modalPresentationStyle = .fullScreen
-//            self.present(nav, animated: true)
-//        }
-//        catch {
-//            print("Failed to log out")
-//        }
+        // Log Out facebook
+        FBSDKLoginKit.LoginManager().logOut()
+        // Google Log out
+        GIDSignIn.sharedInstance()?.signOut()
+
+        do {
+            try FirebaseAuth.Auth.auth().signOut()
+
+            let vc = LoginViewController()
+            let nav = UINavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .fullScreen
+            self.present(nav, animated: true)
+        }
+        catch {
+            print("Failed to log out")
+        }
     }
     
     func createTableHeader() -> UIView? {

@@ -341,17 +341,15 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         
         picker.dismiss(animated: true, completion: nil)
+        guard let messageId = createMessageId(),
+              let conversationId = conversationId,
+              let name = self.title,
+              let selfSender = selfSender else {
+            return
+        }
+        
         if let image = info[.editedImage] as? UIImage, let imageData =  image.pngData() {
-            
-            guard let messageId = createMessageId(),
-                  let conversationId = conversationId,
-                  let name = self.title,
-                  let selfSender = selfSender else {
-                return
-            }
-            
             let fileName = "photo_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".png"
-            
             //uplaod image
             StorageManager.shared.uploadMessagePhoto(with: imageData, fileName: fileName) { [weak self] result in
                 guard let strongSelf = self else {
@@ -361,22 +359,18 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                     case .success(let urlString):
                         // Ready to send message
                         print("Uploaded Message Photo: \(urlString)")
-                        
                         guard let url = URL(string: urlString),
                               let placeholder = UIImage(systemName: "plus") else {
                             return
                         }
-                        
                         let media = Media(url: url,
                                           image: nil,
                                           placeholderImage: placeholder,
                                           size: .zero)
-                        
                         let message = Message(sender: selfSender,
                                               messageId: messageId,
                                               sentDate: Date(),
                                               kind: .photo(media))
-                        
                         DatabaseManager.shared.sendMessage(to: conversationId, otherUserEmail: strongSelf.otherUserEmail, name: name, newMessage: message) { success in
                             if success {
                                 print("sent photo message")
@@ -385,7 +379,41 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                                 print("failed to send photo message")
                             }
                         }
-                        
+                    case .failure(let error):
+                        print("message photo upload error: \(error)")
+                }
+            }
+        } else if let videoUrl = info[.mediaURL] as? URL {
+            let fileName = "photo_message_" + messageId.replacingOccurrences(of: " ", with: "-") + ".mov"
+            // Upload Video
+            StorageManager.shared.uploadMessageVideo(with: videoUrl, fileName: fileName) { [weak self] result in
+                guard let strongSelf = self else {
+                    return
+                }
+                switch result {
+                    case .success(let urlString):
+                        // Ready to send message
+                        print("Uploaded Message Video: \(urlString)")
+                        guard let url = URL(string: urlString),
+                              let placeholder = UIImage(systemName: "plus") else {
+                            return
+                        }
+                        let media = Media(url: url,
+                                          image: nil,
+                                          placeholderImage: placeholder,
+                                          size: .zero)
+                        let message = Message(sender: selfSender,
+                                              messageId: messageId,
+                                              sentDate: Date(),
+                                              kind: .video(media))
+                        DatabaseManager.shared.sendMessage(to: conversationId, otherUserEmail: strongSelf.otherUserEmail, name: name, newMessage: message) { success in
+                            if success {
+                                print("sent photo message")
+                            }
+                            else {
+                                print("failed to send photo message")
+                            }
+                        }
                     case .failure(let error):
                         print("message photo upload error: \(error)")
                 }

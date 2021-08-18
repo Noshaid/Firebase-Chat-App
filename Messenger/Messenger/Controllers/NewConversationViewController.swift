@@ -25,8 +25,8 @@ class NewConversationViewController: UIViewController {
     private let tableView: UITableView = {
         let table = UITableView()
         table.isHidden = true
-        table.register(UITableViewCell.self,
-                       forCellReuseIdentifier: "cell")
+        table.register(NewConversationCell.self,
+                       forCellReuseIdentifier: NewConversationCell.identifier)
         return table
     }()
     
@@ -35,7 +35,7 @@ class NewConversationViewController: UIViewController {
         label.isHidden = true
         label.text = "No Results"
         label.textAlignment = .center
-        label.textColor = .green
+        label.textColor = .gray
         label.font = .systemFont(ofSize: 21, weight: .medium)
         return label
     }()
@@ -81,10 +81,9 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = results[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell",
-                                                 for: indexPath) /*tableView.dequeueReusableCell(withIdentifier: NewConversationCell.identifier,
-                                                 for: indexPath) as! NewConversationCell*/
-        cell.textLabel?.text = model.name//configure(with: model)
+        let cell = tableView.dequeueReusableCell(withIdentifier: NewConversationCell.identifier,
+                                                 for: indexPath) as! NewConversationCell
+        cell.configure(with: model)
         return cell
     }
 
@@ -138,7 +137,6 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     func filterUsers(with term: String) {
         // update the UI: eitehr show results or show no results label
-        
         guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String, hasFetched else {
             return
         }

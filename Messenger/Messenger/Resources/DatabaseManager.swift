@@ -405,10 +405,11 @@ extension DatabaseManager {
                       let content = dictionary["content"] as? String,
                       let senderEmail = dictionary["sender_email"] as? String,
                       let type = dictionary["type"] as? String,
-                      let dateString = dictionary["date"] as? String,
-                      let date = ChatViewController.dateFormatter.date(from: dateString) else {
+                      let dateString = dictionary["date"] as? String
+                      /*let date = ChatViewController.dateFormatter.date(from: dateString)*/ else {
                     return nil
                 }
+                let date = ChatViewController.dateFormatter.date(from: dateString) ?? Date()
                 
                 var kind: MessageKind?
                 if type == "photo" {
@@ -422,6 +423,17 @@ extension DatabaseManager {
                                       placeholderImage: placeHolder,
                                       size: CGSize(width: 300, height: 300))
                     kind = .photo(media)
+                } else if type == "video" {
+                    // video
+                    guard let videoUrl = URL(string: content),
+                        let placeHolder = UIImage(named: "video_placeholder") else {
+                            return nil
+                    }
+                    let media = Media(url: videoUrl,
+                                      image: nil,
+                                      placeholderImage: placeHolder,
+                                      size: CGSize(width: 300, height: 200))
+                    kind = .video(media)
                 } else {
                     kind = .text(content)
                 }
@@ -480,9 +492,9 @@ extension DatabaseManager {
                     }
                     break
                 case .video(let mediaItem):
-//                    if let targetUrlString = mediaItem.url?.absoluteString {
-//                        message = targetUrlString
-//                    }
+                    if let targetUrlString = mediaItem.url?.absoluteString {
+                        message = targetUrlString
+                    }
                     break
                 case .location(let locationData):
 //                    let location = locationData.location
@@ -594,6 +606,45 @@ extension DatabaseManager {
                         }
                     }
                 }
+            }
+        }
+    }
+    
+    public func deleteConversation(conversationId: String, completion: @escaping (Bool) -> Void) {
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+
+        print("Deleting conversation with id: \(conversationId)")
+
+        // Get all conversations for current user
+        // delete conversation in collection with target id
+        // reset those conversations for the user in database
+        
+        let ref = database.child("\(safeEmail)/conversations")
+        ref.observeSingleEvent(of: .value) { snapshot in
+            if var conversations = snapshot.value as? [[String: Any]] {
+                var positionToRemove = 0
+                for conversation in conversations {
+                    if let id = conversation["id"] as? String,
+                        id == conversationId {
+                        print("found conversation to delete")
+                        break
+                    }
+                    positionToRemove += 1
+                }
+
+                conversations.remove(at: positionToRemove)
+                ref.setValue(conversations, withCompletionBlock: { error, _  in
+                    guard error == nil else {
+                        completion(false)
+                        print("faield to write new conversatino array")
+                        return
+                    }
+                    print("deleted conversaiton")
+                    completion(true)
+                })
             }
         }
     }
