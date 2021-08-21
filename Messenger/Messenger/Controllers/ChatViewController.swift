@@ -95,7 +95,7 @@ class ChatViewController: MessagesViewController {
             
         }))
         actionSheet.addAction(UIAlertAction(title: "Location", style: .default, handler: { [weak self]  _ in
-            //self?.presentLocationPicker()
+            self?.presentLocationPicker()
         }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
@@ -329,6 +329,45 @@ extension ChatViewController {
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         
         present(actionSheet, animated: true)
+    }
+    
+    //location
+    private func presentLocationPicker() {
+        let vc = LocationPickerViewController(coordinates: nil)
+        vc.title = "Pick Location"
+        vc.navigationItem.largeTitleDisplayMode = .never
+        vc.completion = { [weak self] selectedCoorindates in
+            guard let strongSelf = self else {
+                return
+            }
+            guard let messageId = strongSelf.createMessageId(),
+                let conversationId = strongSelf.conversationId,
+                let name = strongSelf.title,
+                let selfSender = strongSelf.selfSender else {
+                    return
+            }
+
+            let longitude: Double = selectedCoorindates.longitude
+            let latitude: Double = selectedCoorindates.latitude
+            print("long=\(longitude) | lat= \(latitude)")
+
+            let mediaLocation = Location(location: CLLocation(latitude: latitude, longitude: longitude),
+                                 size: .zero)
+            let message = Message(sender: selfSender,
+                                  messageId: messageId,
+                                  sentDate: Date(),
+                                  kind: .location(mediaLocation))
+
+            DatabaseManager.shared.sendMessage(to: conversationId, otherUserEmail: strongSelf.otherUserEmail, name: name, newMessage: message, completion: { success in
+                if success {
+                    print("sent location message")
+                }
+                else {
+                    print("failed to send location message")
+                }
+            })
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

@@ -91,7 +91,7 @@ class LoginViewController: UIViewController {
         })
         
         title = "Login"
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register",
                                                                     style: .done,

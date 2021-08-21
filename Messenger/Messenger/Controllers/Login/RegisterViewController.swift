@@ -108,11 +108,6 @@ class RegisterViewController: UIViewController {
         title = "Register"
         view.backgroundColor = .systemBackground
 
-//        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register",
-//                                                            style: .done,
-//                                                            target: self,
-//                                                            action: #selector(didTapRegister))
-
         registerButton.addTarget(self,
                               action: #selector(registerButtonTapped),
                               for: .touchUpInside)
