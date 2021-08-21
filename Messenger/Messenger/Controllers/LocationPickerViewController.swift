@@ -44,8 +44,7 @@ class LocationPickerViewController: UIViewController {
             gesture.numberOfTouchesRequired = 1
             gesture.numberOfTapsRequired = 1
             map.addGestureRecognizer(gesture)
-        }
-        else {
+        } else {
             // just showing location
             guard let coordinates = self.coordinates else {
                 return

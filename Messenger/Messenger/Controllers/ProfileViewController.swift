@@ -9,12 +9,13 @@ import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
 import GoogleSignIn
+import SDWebImage
 
 class ProfileViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
-    var data = ["Logout"]
+    var data = [ProfileViewModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,31 +23,61 @@ class ProfileViewController: UIViewController {
         tableView.register(ProfileTableViewCell.self,
                                    forCellReuseIdentifier: ProfileTableViewCell.identifier)
         
+        data.append(ProfileViewModel(viewModelType: .info,
+                                     title: "Name: \(UserDefaults.standard.value(forKey:"name") as? String ?? "No Name")",
+                                     handler: nil))
+        data.append(ProfileViewModel(viewModelType: .info,
+                                     title: "Email: \(UserDefaults.standard.value(forKey:"email") as? String ?? "No Email")",
+                                     handler: nil))
+        data.append(ProfileViewModel(viewModelType: .logout, title: "Log Out", handler: { [weak self] in
+            guard let strongSelf = self else {
+                return
+            }
+            let actionSheet = UIAlertController(title: "",
+                                          message: "",
+                                          preferredStyle: .actionSheet)
+            actionSheet.addAction(UIAlertAction(title: "Log Out",
+                                          style: .destructive,
+                                          handler: { [weak self] _ in
+
+                                            guard let strongSelf = self else {
+                                                return
+                                            }
+                                            UserDefaults.standard.setValue(nil, forKey: "email")
+                                            UserDefaults.standard.setValue(nil, forKey: "name")
+
+                                            // Log Out facebook
+                                            FBSDKLoginKit.LoginManager().logOut()
+
+                                            // Google Log out
+                                            GIDSignIn.sharedInstance()?.signOut()
+
+                                            do {
+                                                try FirebaseAuth.Auth.auth().signOut()
+
+                                                let vc = LoginViewController()
+                                                let nav = UINavigationController(rootViewController: vc)
+                                                nav.modalPresentationStyle = .fullScreen
+                                                strongSelf.present(nav, animated: true)
+                                            }
+                                            catch {
+                                                print("Failed to log out")
+                                            }
+
+            }))
+
+            actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                                style: .cancel,
+                                                handler: nil))
+
+            strongSelf.present(actionSheet, animated: true)
+        }))
+        
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableHeaderView = createTableHeader()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
         
-//        // Log Out facebook
-//        FBSDKLoginKit.LoginManager().logOut()
-//        // Google Log out
-//        GIDSignIn.sharedInstance()?.signOut()
-//
-//        do {
-//            try FirebaseAuth.Auth.auth().signOut()
-//
-//            let vc = LoginViewController()
-//            let nav = UINavigationController(rootViewController: vc)
-//            nav.modalPresentationStyle = .fullScreen
-//            self.present(nav, animated: true)
-//        }
-//        catch {
-//            print("Failed to log out")
-//        }
-    }
-    
     func createTableHeader() -> UIView? {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
@@ -74,14 +105,14 @@ class ProfileViewController: UIViewController {
         imageView.layer.cornerRadius = imageView.width/2
         headerView.addSubview(imageView)
         
-        /*StorageManager.shared.downloadURL(for: path, completion: { result in
+        StorageManager.shared.downloadURL(for: path, completion: { result in
             switch result {
                 case .success(let url):
-                    //imageView.sd_setImage(with: url, completed: nil)
+                    imageView.sd_setImage(with: url, completed: nil)
                 case .failure(let error):
                     print("Failed to get download url: \(error)")
             }
-        })*/
+        })
         return headerView
     }
 }
@@ -95,13 +126,13 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         let viewModel = data[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.identifier,
                                                  for: indexPath) as! ProfileTableViewCell
-        //cell.setUp(with: viewModel)
+        cell.setUp(with: viewModel)
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        //data[indexPath.row].handler?()
+        data[indexPath.row].handler?()
     }
 }
 
@@ -109,7 +140,7 @@ class ProfileTableViewCell: UITableViewCell {
 
     static let identifier = "ProfileTableViewCell"
 
-    /*public func setUp(with viewModel: ProfileViewModel) {
+    public func setUp(with viewModel: ProfileViewModel) {
         self.textLabel?.text = viewModel.title
         switch viewModel.viewModelType {
         case .info:
@@ -119,5 +150,5 @@ class ProfileTableViewCell: UITableViewCell {
             textLabel?.textColor = .red
             textLabel?.textAlignment = .center
         }
-    }*/
+    }
 }
