@@ -313,7 +313,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
             return
         }
 
-        self.imageView.image = selectedImage
+        imageView.image = selectedImage
     }
 
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {

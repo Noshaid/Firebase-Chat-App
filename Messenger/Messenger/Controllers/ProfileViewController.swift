@@ -89,7 +89,7 @@ class ProfileViewController: UIViewController {
         
         let headerView = UIView(frame: CGRect(x: 0,
                                               y: 0,
-                                              width: self.view.width,
+                                              width: view.width,
                                               height: 300))
         headerView.backgroundColor = .link
         
@@ -141,7 +141,7 @@ class ProfileTableViewCell: UITableViewCell {
     static let identifier = "ProfileTableViewCell"
 
     public func setUp(with viewModel: ProfileViewModel) {
-        self.textLabel?.text = viewModel.title
+        textLabel?.text = viewModel.title
         switch viewModel.viewModelType {
         case .info:
             textLabel?.textAlignment = .left

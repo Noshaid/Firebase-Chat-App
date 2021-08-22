@@ -213,7 +213,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
             // begin delete
             let conversationId = conversations[indexPath.row].id
             tableView.beginUpdates()
-            self.conversations.remove(at: indexPath.row)
+            conversations.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .left)
 
             DatabaseManager.shared.deleteConversation(conversationId: conversationId, completion: { success in

@@ -142,7 +142,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         }
         
         let safeEmail = DatabaseManager.safeEmail(emailAddress: currentUserEmail)
-        self.spinner.dismiss()
+        spinner.dismiss()
         
         let results: [SearchResult] = users.filter({
             guard let email = $0["email"], email != safeEmail else {
