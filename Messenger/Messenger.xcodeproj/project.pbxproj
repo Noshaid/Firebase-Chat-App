@@ -26,7 +26,6 @@
 		66D5BAAD260CD1E1003411C3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D5BAAC260CD1E1003411C3 /* LoginViewController.swift */; };
 		66D5BAB1260CD1EE003411C3 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D5BAB0260CD1EE003411C3 /* RegisterViewController.swift */; };
 		66D5BAB4260CD213003411C3 /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D5BAB3260CD213003411C3 /* PhotoViewerViewController.swift */; };
-		66D5BAB7260CD225003411C3 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D5BAB6260CD225003411C3 /* VideoPlayerViewController.swift */; };
 		66D5BABA260CD248003411C3 /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D5BAB9260CD248003411C3 /* NewConversationViewController.swift */; };
 		66D5BABD260CD25A003411C3 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D5BABC260CD25A003411C3 /* ProfileViewController.swift */; };
 		66D5BAC2260CE09D003411C3 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66D5BAC1260CE09D003411C3 /* Extensions.swift */; };
@@ -55,7 +54,6 @@
 		66D5BAAC260CD1E1003411C3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		66D5BAB0260CD1EE003411C3 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		66D5BAB3260CD213003411C3 /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
-		66D5BAB6260CD225003411C3 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		66D5BAB9260CD248003411C3 /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		66D5BABC260CD25A003411C3 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		66D5BAC1260CE09D003411C3 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -133,7 +131,6 @@
 				66D5BA93260CCEA3003411C3 /* ConversationsViewController.swift */,
 				66D5BABF260CD659003411C3 /* Login */,
 				66D5BAB3260CD213003411C3 /* PhotoViewerViewController.swift */,
-				66D5BAB6260CD225003411C3 /* VideoPlayerViewController.swift */,
 				66D5BAB9260CD248003411C3 /* NewConversationViewController.swift */,
 				66D5BABC260CD25A003411C3 /* ProfileViewController.swift */,
 				66A024F026677D7A00D73531 /* ChatViewController.swift */,
@@ -359,7 +356,6 @@
 				667C74C126D1169600BD8FBE /* LocationPickerViewController.swift in Sources */,
 				66D5BABA260CD248003411C3 /* NewConversationViewController.swift in Sources */,
 				66D5BA94260CCEA3003411C3 /* ConversationsViewController.swift in Sources */,
-				66D5BAB7260CD225003411C3 /* VideoPlayerViewController.swift in Sources */,
 				66D5BAC2260CE09D003411C3 /* Extensions.swift in Sources */,
 				66F9995226CD9FE900CEFF82 /* NewConversationCell.swift in Sources */,
 				66D5BA90260CCEA3003411C3 /* AppDelegate.swift in Sources */,

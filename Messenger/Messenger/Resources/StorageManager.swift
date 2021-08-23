@@ -13,8 +13,12 @@ public enum StorageErrors: Error {
     case failedToGetDownloadUrl
 }
 
+/// Allows you to get, fetch, and upload files to firebase  storage
 final class StorageManager {
 
+    //make private initializer: force to use shared singeltion
+    private init() {}
+    
     static let shared = StorageManager()
     private let storage = Storage.storage().reference()
 

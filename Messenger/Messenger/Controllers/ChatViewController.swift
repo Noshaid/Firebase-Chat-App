@@ -13,7 +13,7 @@ import AVFoundation
 import AVKit
 import CoreLocation
 
-class ChatViewController: MessagesViewController {
+final class ChatViewController: MessagesViewController {
 
     private var senderPhotoURL: URL?
     private var otherUserPhotoURL: URL?

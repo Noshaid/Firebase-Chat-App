@@ -21,10 +21,10 @@ public enum DatabaseError: Error {
     }
 }
 
-// Manager object to read and write data to real time firebase database
+/// Manager object to read and write data to real time firebase database
 final class DatabaseManager {
 
-    // Shared instance of class
+    /// Shared instance of class
     public static let shared = DatabaseManager()
     private let database = Database.database().reference()
 
@@ -52,7 +52,10 @@ extension DatabaseManager {
 // MARK: - Account Mgmt
 extension DatabaseManager {
     
-    // - `completion`:   Async closure to return with result
+    /// Checks if user exists for given email
+    /// Parameters
+    /// - `email`:              Target email to be checked
+    /// - `completion`:   Async closure to return with result
     public func userExists(with email: String,
                            completion: @escaping ((Bool) -> Void)) {
         
@@ -66,7 +69,7 @@ extension DatabaseManager {
         })
     }
     
-    // Inserts new user to database
+    /// Inserts new user to database
     public func insertUser(with user: ChatAppUser, completion: @escaping (Bool) -> Void) {
         database.child(user.safeEmail).setValue([
             "first_name": user.firstName,
@@ -129,7 +132,7 @@ extension DatabaseManager {
         })
     }
     
-    // Gets all users from database
+    /// Gets all users from database
     public func getAllUsers(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value, with: { snapshot in
             guard let value = snapshot.value as? [[String: String]] else {
@@ -290,6 +293,7 @@ extension DatabaseManager {
         }
     }
     
+    /// finish creating conversation
     private func finishCreatingConversation(name: String, conversationID: String, firstMessage: Message, completion: @escaping (Bool) -> Void) {
     //        {
     //            "id": String,
@@ -676,6 +680,7 @@ extension DatabaseManager {
         })
     }
     
+    /// delete conversation
     public func deleteConversation(conversationId: String, completion: @escaping (Bool) -> Void) {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return
@@ -715,6 +720,7 @@ extension DatabaseManager {
         }
     }
     
+    /// check already exists conversation
     public func conversationExists(with targetRecipientEmail: String, completion: @escaping (Result<String, Error>) -> Void) {
         
         let safeRecipientEmail = DatabaseManager.safeEmail(emailAddress: targetRecipientEmail)

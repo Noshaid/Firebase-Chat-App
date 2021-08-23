@@ -11,7 +11,7 @@ import FBSDKLoginKit
 import GoogleSignIn
 import SDWebImage
 
-class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
     
