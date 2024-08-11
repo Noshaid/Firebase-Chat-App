@@ -18,4 +18,4 @@ Real time messenger app using Firebase `Realtime Database`, `Storage` & `Authent
 Reference: https://www.youtube.com/watch?v=Mroju8T7Gdo&list=PL5PR3UyfTWvdlk-Qi-dPtJmjTj-2YIMMf&index=1&ab_channel=iOSAcademy
 
 ## Set Up
-After cloning the repo, you'll need to run pod install to install cocoapod dependencies.
+After cloning the repo, you'll need to run `pod install` to install cocoapod dependencies.
